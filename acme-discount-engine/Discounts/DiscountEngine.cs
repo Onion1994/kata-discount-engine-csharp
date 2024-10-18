@@ -9,30 +9,15 @@ namespace acme_discount_engine.Discounts
 
         private List<string> TwoForOneList = new List<string> { "Freddo" };
         private List<string> NoDiscount = new List<string> { "T-Shirt", "Keyboard", "Drill", "Chair" };
+        private TwoForOneDiscount TwoForOneDiscount = new TwoForOneDiscount();
 
         public double ApplyDiscounts(List<Item> items)
         {
-            items.Sort((x, y) => x.Name.CompareTo(y.Name));
+            items.Sort((firstItem, secondItem) => firstItem.Name.CompareTo(secondItem.Name));
             string currentItem = string.Empty;
             int itemCount = 0;
 
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].Name != currentItem)
-                {
-                    currentItem = items[i].Name;
-                    itemCount = 1;
-                }
-                else
-                {
-                    itemCount++;
-                    if (itemCount == 3 && TwoForOneList.Contains(items[i].Name))
-                    {
-                        items[i].Price = 0.00;
-                        itemCount = 0;
-                    }
-                }
-            }
+            TwoForOneDiscount.ApplyDiscount(items, TwoForOneList, currentItem, itemCount);
 
             double itemTotal = 0.00;
             foreach (var item in items)
