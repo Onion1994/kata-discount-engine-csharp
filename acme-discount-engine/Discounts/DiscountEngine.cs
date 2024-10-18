@@ -1,4 +1,5 @@
 ﻿using AcmeSharedModels;
+using System.Security.AccessControl;
 
 namespace acme_discount_engine.Discounts
 {
@@ -10,6 +11,7 @@ namespace acme_discount_engine.Discounts
         private List<string> TwoForOneList = new List<string> { "Freddo" };
         private List<string> NoDiscount = new List<string> { "T-Shirt", "Keyboard", "Drill", "Chair" };
         private TwoForOneDiscount TwoForOneDiscount = new TwoForOneDiscount();
+        private PerishableItemHandler perishableItemHandler = new PerishableItemHandler();
 
         public double ApplyDiscounts(List<Item> items)
         {
@@ -26,7 +28,11 @@ namespace acme_discount_engine.Discounts
                 int daysUntilDate = (item.Date - DateTime.Today).Days;
                 if(DateTime.Today > item.Date) { daysUntilDate = -1; }
 
-                if (!item.IsPerishable)
+                if (item.IsPerishable)
+                {
+                    perishableItemHandler.HandlePerishableItems(daysUntilDate, Time, item);
+                }
+                else
                 {
                     if (!NoDiscount.Contains(item.Name))
                     {
@@ -41,28 +47,6 @@ namespace acme_discount_engine.Discounts
                         else if (daysUntilDate < 0)
                         {
                             item.Price -= item.Price * 0.20;
-                        }
-                    }
-                }
-                else
-                {
-                    if (daysUntilDate == 0)
-                    {
-                        if (Time.Hour >= 0 && Time.Hour < 12)
-                        {
-                            item.Price -= item.Price * 0.05;
-                        }
-                        else if (Time.Hour >= 12 && Time.Hour < 16)
-                        {
-                            item.Price -= item.Price * 0.10;
-                        }
-                        else if (Time.Hour >= 16 && Time.Hour < 18)
-                        {
-                            item.Price -= item.Price * 0.15;
-                        }
-                        else if (Time.Hour >= 18)
-                        {
-                            item.Price -= item.Price * (!item.Name.Contains("(Meat)") ? 0.25 : 0.15);
                         }
                     }
                 }
