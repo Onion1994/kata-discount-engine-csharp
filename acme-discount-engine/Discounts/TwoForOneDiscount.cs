@@ -9,9 +9,10 @@ namespace acme_discount_engine.Discounts
 {
     internal class TwoForOneDiscount
     {
-        public void ApplyDiscount(List<Item> items, List<string> twoForOneList, string currentItem, int itemCount)
+        public void ApplyDiscount(List<Item> items, List<string> twoForOneList)
         {
-
+            string currentItem = string.Empty;
+            int itemCount = 0;
             foreach (var item in items)
             {
                 if (item.Name != currentItem)
