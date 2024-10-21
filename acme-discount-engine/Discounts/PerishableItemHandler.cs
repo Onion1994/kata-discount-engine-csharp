@@ -13,22 +13,31 @@ namespace acme_discount_engine.Discounts
         {
             if (daysUntilDate == 0)
             {
+            Money money = new Money(item.Price);
                 if (Time.Hour >= 0 && Time.Hour < 12)
                 {
-                    item.Price -= item.Price * 0.05;
+                    money.LowerByPercent(0.05);
                 }
                 else if (Time.Hour >= 12 && Time.Hour < 16)
                 {
-                    item.Price -= item.Price * 0.10;
+                    money.LowerByPercent(0.10);
                 }
                 else if (Time.Hour >= 16 && Time.Hour < 18)
                 {
-                    item.Price -= item.Price * 0.15;
+                    money.LowerByPercent(0.15);
                 }
                 else if (Time.Hour >= 18)
                 {
-                    item.Price -= item.Price * (!item.Name.Contains("(Meat)") ? 0.25 : 0.15);
+                    if (item.Name.Contains("(Meat)"))
+                    {
+                        money.LowerByPercent(0.15);
+                    }
+                    else
+                    {
+                        money.LowerByPercent(0.25);
+                    }
                 }
+                item.Price = money.Amount;
             }
         }
     }

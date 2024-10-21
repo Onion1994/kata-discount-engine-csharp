@@ -12,6 +12,7 @@ namespace acme_discount_engine.Discounts
         private List<string> NoDiscount = new List<string> { "T-Shirt", "Keyboard", "Drill", "Chair" };
         private TwoForOneDiscount TwoForOneDiscount = new TwoForOneDiscount();
         private PerishableItemHandler perishableItemHandler = new PerishableItemHandler();
+        private UndiscountedItemsHandler undiscountedItemHandler = new UndiscountedItemsHandler();
 
         public double ApplyDiscounts(List<Item> items)
         {
@@ -33,25 +34,11 @@ namespace acme_discount_engine.Discounts
                 {
                     perishableItemHandler.HandlePerishableItems(daysUntilDate, Time, item);
                 }
-                else
-                {
-                    if (!NoDiscount.Contains(item.Name))
+                else if (!NoDiscount.Contains(item.Name))
                     {
-                        if (daysUntilDate >= 6 && daysUntilDate <= 10)
-                        {
-                            item.Price -= item.Price * 0.05;
-                        }
-                        else if (daysUntilDate >= 0 && daysUntilDate <= 5)
-                        {
-                            item.Price -= item.Price * 0.10;
-                        }
-                        else if (daysUntilDate < 0)
-                        {
-                            item.Price -= item.Price * 0.20;
-                        }
+                        undiscountedItemHandler.HadleUndiscountedItems(daysUntilDate, item);
                     }
                 }
-            }
 
             currentItem = string.Empty;
             itemCount = 0;
