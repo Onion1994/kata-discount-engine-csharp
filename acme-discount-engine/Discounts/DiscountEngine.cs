@@ -10,22 +10,27 @@ namespace acme_discount_engine.Discounts
 
         private List<string> TwoForOneList = new List<string> { "Freddo" };
         private List<string> NoDiscount = new List<string> { "T-Shirt", "Keyboard", "Drill", "Chair" };
-        private TwoForOneDiscount TwoForOneDiscount = new TwoForOneDiscount();
+        private TwoForOneDiscount TwoForOneDiscount;
         private PerishableItemHandler perishableItemHandler = new PerishableItemHandler();
-        private UndiscountedItemsHandler undiscountedItemHandler = new UndiscountedItemsHandler();
+        private NonPerishableItemHandler undiscountedItemHandler = new NonPerishableItemHandler();
         private BulkDiscountHandler bulkDiscountHandler = new BulkDiscountHandler();
+
+        public DiscountEngine()
+        {
+            TwoForOneDiscount = new TwoForOneDiscount(TwoForOneList);
+        }
 
         public double ApplyDiscounts(List<Item> items)
         {
+            TwoForOneDiscount = new TwoForOneDiscount(TwoForOneList);
             items.Sort((firstItem, secondItem) => firstItem.Name.CompareTo(secondItem.Name));
 
-            TwoForOneDiscount.ApplyDiscount(items, TwoForOneList);
+            TwoForOneDiscount.ApplyDiscount(items);
+            Money itemTotal = new Money(0.00);
 
-
-            double itemTotal = 0.00;
             foreach (var item in items)
             {
-                itemTotal += item.Price;
+                itemTotal.Add(item.Price);
                 int daysUntilDate = (item.Date - DateTime.Today).Days;
                 if(DateTime.Today > item.Date) { daysUntilDate = -1; }
 
@@ -35,20 +40,20 @@ namespace acme_discount_engine.Discounts
                 }
                 else if (!NoDiscount.Contains(item.Name))
                     {
-                        undiscountedItemHandler.HandleUndiscountedItems(daysUntilDate, item);
+                        undiscountedItemHandler.HandleNonPerishableItems(daysUntilDate, item);
                     }
                 }
 
             bulkDiscountHandler.HandleBulkDiscount(items, TwoForOneList);
 
-            double finalTotal = items.Sum(item => item.Price);
+            Money finalTotal = new Money(items.Sum(item => item.Price));
 
-            if (LoyaltyCard && itemTotal >= 50.00)
+            if (LoyaltyCard && itemTotal.Amount >= 50.00)
             {
-                finalTotal -= finalTotal * 0.02;
+                finalTotal.LowerByPercent(0.02);
             }
 
-            return Math.Round(finalTotal, 2);
+            return Math.Round(finalTotal.Amount, 2);
         }
     }
 }

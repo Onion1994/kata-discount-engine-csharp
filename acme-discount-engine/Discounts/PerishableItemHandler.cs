@@ -14,19 +14,19 @@ namespace acme_discount_engine.Discounts
             if (daysUntilDate == 0)
             {
             Money money = new Money(item.Price);
-                if (Time.Hour >= 0 && Time.Hour < 12)
+                if (Time.Hour < 12)
                 {
                     money.LowerByPercent(0.05);
                 }
-                else if (Time.Hour >= 12 && Time.Hour < 16)
+                else if (Time.Hour < 16)
                 {
                     money.LowerByPercent(0.10);
                 }
-                else if (Time.Hour >= 16 && Time.Hour < 18)
+                else if (Time.Hour < 18)
                 {
                     money.LowerByPercent(0.15);
                 }
-                else if (Time.Hour >= 18)
+                if (Time.Hour >= 18)
                 {
                     if (item.Name.Contains("(Meat)"))
                     {

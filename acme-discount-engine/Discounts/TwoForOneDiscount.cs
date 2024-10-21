@@ -7,9 +7,16 @@ using System.Threading.Tasks;
 
 namespace acme_discount_engine.Discounts
 {
-    internal class TwoForOneDiscount
+    public class TwoForOneDiscount : IDiscountStrategy
     {
-        public void ApplyDiscount(List<Item> items, List<string> twoForOneList)
+        List<string> TwoForOneList;
+
+        public TwoForOneDiscount(List<string> twoForOneList)
+        {
+            TwoForOneList = twoForOneList;
+        }
+
+        public void ApplyDiscount(List<Item> items)
         {
             string currentItem = string.Empty;
             int itemCount = 0;
@@ -23,7 +30,7 @@ namespace acme_discount_engine.Discounts
                 else
                 {
                     itemCount++;
-                    if (itemCount == 3 && twoForOneList.Contains(item.Name))
+                    if (itemCount == 3 && TwoForOneList.Contains(item.Name))
                     {
                         item.Price = 0.00;
                         itemCount = 0;

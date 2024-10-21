@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace acme_discount_engine.Discounts
 {
-    internal class UndiscountedItemsHandler
+    internal class NonPerishableItemHandler
     {
-        public void HandleUndiscountedItems(int daysUntilDate, Item item)
+        public void HandleNonPerishableItems(int daysUntilDate, Item item)
         {
             Money money = new Money(item.Price);
             if (daysUntilDate >= 6 && daysUntilDate <= 10)
