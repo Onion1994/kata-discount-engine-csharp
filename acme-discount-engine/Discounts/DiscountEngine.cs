@@ -21,6 +21,7 @@ namespace acme_discount_engine.Discounts
 
             TwoForOneDiscount.ApplyDiscount(items, TwoForOneList, currentItem, itemCount);
 
+
             double itemTotal = 0.00;
             foreach (var item in items)
             {
