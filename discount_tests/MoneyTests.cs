@@ -9,7 +9,7 @@ namespace discount_tests
         public void ShouldStoreCorrectAmount()
         {
             // Arrange
-            double initialAmount = 100.00;  // Use decimal for currency
+            double initialAmount = 100.00;
 
             // Act
             Money money = new Money(initialAmount);
@@ -21,7 +21,7 @@ namespace discount_tests
         public void ShouldAddCorrectAmount()
         {
             // Arrange
-            double initialAmount = 100.00;  // Use decimal for currency
+            double initialAmount = 100.00;
             Money money = new Money(initialAmount);
 
             // Act
@@ -29,6 +29,34 @@ namespace discount_tests
 
             // Assert
             double expected = 150.00;
+            Assert.AreEqual(expected, money.Amount);
+        }
+        [TestMethod]
+        public void ShouldRaiseAmountByGivenPercentage()
+        {
+            // Arrange
+            double initialAmount = 100.00;
+            Money money = new Money(initialAmount);
+
+            // Act
+            money.RaiseByPercent(0.15);
+
+            // Assert
+            double expected = 115.00;
+            Assert.AreEqual(expected, money.Amount);
+        }
+        [TestMethod]
+        public void ShouldLowerAmountByGivenPercentage()
+        {
+            // Arrange
+            double initialAmount = 100.00;
+            Money money = new Money(initialAmount);
+
+            // Act
+            money.LowerByPercent(0.15);
+
+            // Assert
+            double expected = 85.00;
             Assert.AreEqual(expected, money.Amount);
         }
     }

@@ -15,5 +15,13 @@ namespace acme_discount_engine.Discounts
         public void Add(double amount) {
             Amount += amount;
         }
+        public void RaiseByPercent(double amount)
+        {
+            Amount += Amount * amount;
+        }
+        public void LowerByPercent(double amount)
+        {
+            Amount -= Amount * amount;
+        }
     }
 }
